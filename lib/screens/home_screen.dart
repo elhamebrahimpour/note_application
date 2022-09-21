@@ -21,33 +21,29 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: backColor,
       body: SafeArea(
-        child: Stack(
-          children: [
-            ListView.builder(
-              //get taskbox lenght from hive db
-              itemCount: taskBox.values.length,
-              itemBuilder: ((context, index) {
-                var task = taskBox.values.toList()[index];
-                return TaskWidget(
-                  task: task,
-                );
-              }),
-            ),
-            Positioned(
-              right: 10,
-              bottom: 10,
-              child: FloatingActionButton(
-                onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: ((context) => AddTaskSreen()),
-                  ),
-                ),
-                backgroundColor: greenColor,
-                child: Icon(Icons.add),
-              ),
-            )
-          ],
+        child: ValueListenableBuilder(
+          //box.listenable works as a valueNotifier in hive database
+          valueListenable: taskBox.listenable(),
+          builder: ((context, value, child) => ListView.builder(
+                //get taskbox lenght from hive db
+                itemCount: taskBox.values.length,
+                itemBuilder: ((context, index) {
+                  var task = taskBox.values.toList()[index];
+                  return TaskWidget(
+                    task: task,
+                  );
+                }),
+              )),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Navigator.of(context).push(
+          MaterialPageRoute<Task>(
+            builder: ((context) => AddTaskSreen()),
+          ),
+        ),
+        backgroundColor: greenColor,
+        child: Icon(Icons.add),
       ),
     );
   }

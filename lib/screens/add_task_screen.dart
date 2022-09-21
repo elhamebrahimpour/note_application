@@ -48,7 +48,7 @@ class _AddTaskSreenState extends State<AddTaskSreen> {
               child: ElevatedButton(
                 onPressed: () {
                   addTask(_titleController.text, _subTitleController.text);
-                  setState(() {});
+                  Navigator.of(context).pop();
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: greenColor,
