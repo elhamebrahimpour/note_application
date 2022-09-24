@@ -3,19 +3,20 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:note_application/constants/color_constant.dart';
 import 'package:note_application/model/task.dart';
 
-class AddTaskSreen extends StatefulWidget {
-  AddTaskSreen({Key? key}) : super(key: key);
+class EditTaskScreen extends StatefulWidget {
+  EditTaskScreen({Key? key, required this.task}) : super(key: key);
+  Task task;
 
   @override
-  State<AddTaskSreen> createState() => _AddTaskSreenState();
+  State<EditTaskScreen> createState() => _EditTaskScreenState();
 }
 
-class _AddTaskSreenState extends State<AddTaskSreen> {
+class _EditTaskScreenState extends State<EditTaskScreen> {
   FocusNode _titleFocusNode = FocusNode();
   FocusNode _subTitleFocusNode = FocusNode();
 
-  TextEditingController _titleController = TextEditingController();
-  TextEditingController _subTitleController = TextEditingController();
+  TextEditingController? _titleController;
+  TextEditingController? _subTitleController;
 
   //get box to put data in it
   var taskBox = Hive.box<Task>('taskBox');
@@ -23,6 +24,10 @@ class _AddTaskSreenState extends State<AddTaskSreen> {
   @override
   void initState() {
     super.initState();
+
+    _titleController = TextEditingController(text: widget.task.title);
+    _subTitleController = TextEditingController(text: widget.task.subTitle);
+
     _titleFocusNode.addListener(() {
       setState(() {});
     });
@@ -39,15 +44,15 @@ class _AddTaskSreenState extends State<AddTaskSreen> {
         child: Column(
           children: [
             _getTextField(
-                'عنوان', 'عنوان تسک', _titleFocusNode, 1, _titleController),
+                'عنوان', 'عنوان تسک', _titleFocusNode, 1, _titleController!),
             _getTextField('توضیحات', 'توضیحات تسک', _subTitleFocusNode, 2,
-                _subTitleController),
+                _subTitleController!),
             Spacer(),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 24),
               child: ElevatedButton(
                 onPressed: () {
-                  addTask(_titleController.text, _subTitleController.text);
+                  eidtTask(_titleController!.text, _subTitleController!.text);
                   Navigator.of(context).pop();
                 },
                 style: ElevatedButton.styleFrom(
@@ -55,7 +60,7 @@ class _AddTaskSreenState extends State<AddTaskSreen> {
                   minimumSize: Size(178, 48),
                 ),
                 child: Text(
-                  'افزودن تسک',
+                  'ویرایش تسک',
                   style: TextStyle(
                       fontSize: 20,
                       color: whiteColor,
@@ -69,9 +74,10 @@ class _AddTaskSreenState extends State<AddTaskSreen> {
     );
   }
 
-  addTask(String taskTitle, String taskSubTitle) {
-    var task = Task(title: taskTitle, subTitle: taskSubTitle);
-    taskBox.add(task);
+  eidtTask(String taskTitle, String taskSubTitle) {
+    widget.task.title = taskTitle;
+    widget.task.subTitle = taskSubTitle;
+    widget.task.save();
   }
 
   Widget _getTextField(String str1, String str2, FocusNode focusNode,

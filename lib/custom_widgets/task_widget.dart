@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:note_application/constants/color_constant.dart';
 import 'package:note_application/model/task.dart';
+import 'package:note_application/screens/edit_task_screen.dart';
 
 class TaskWidget extends StatefulWidget {
   TaskWidget({Key? key, required this.task}) : super(key: key);
@@ -96,11 +97,20 @@ class _TaskWidgetState extends State<TaskWidget> {
                   SizedBox(
                     width: 12,
                   ),
-                  _getTimeAndEditContainer(
-                    lightGreen,
-                    greenColor,
-                    'ویرایش',
-                    'icon_edit',
+                  InkWell(
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: ((context) => EditTaskScreen(
+                              task: widget.task,
+                            )),
+                      ),
+                    ),
+                    child: _getTimeAndEditContainer(
+                      lightGreen,
+                      greenColor,
+                      'ویرایش',
+                      'icon_edit',
+                    ),
                   )
                 ],
               )
