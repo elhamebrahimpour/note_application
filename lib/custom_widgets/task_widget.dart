@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:note_application/constants/color_constant.dart';
-import 'package:note_application/model/task.dart';
+import 'package:note_application/data/model/task.dart';
 import 'package:note_application/screens/edit_task_screen.dart';
 
 class TaskWidget extends StatefulWidget {
@@ -39,7 +39,7 @@ class _TaskWidgetState extends State<TaskWidget> {
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: whiteColor,
+          color: AppColors.whiteColor,
         ),
         child: _getMainContent(),
       ),
@@ -57,17 +57,16 @@ class _TaskWidgetState extends State<TaskWidget> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SizedBox(
-                    height: 32,
-                    width: 32,
+                  Transform.scale(
+                    scale: 1.2,
                     child: Checkbox(
                       value: isBoxChecked,
                       onChanged: ((value) {}),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(6),
                       ),
-                      checkColor: whiteColor,
-                      activeColor: greenColor,
+                      checkColor: AppColors.whiteColor,
+                      activeColor: AppColors.greenColor,
                     ),
                   ),
                   Text(widget.task.title,
@@ -89,10 +88,10 @@ class _TaskWidgetState extends State<TaskWidget> {
               Row(
                 children: [
                   _getTimeAndEditContainer(
-                    greenColor,
-                    blackColor,
-                    '10:30',
-                    'icon_time',
+                    AppColors.greenColor,
+                    AppColors.whiteColor,
+                    '${_checkTimeUnderTen(widget.task.time)}',
+                    'icon_time_16',
                   ),
                   SizedBox(
                     width: 12,
@@ -106,8 +105,8 @@ class _TaskWidgetState extends State<TaskWidget> {
                       ),
                     ),
                     child: _getTimeAndEditContainer(
-                      lightGreen,
-                      greenColor,
+                      AppColors.lightGreen,
+                      AppColors.greenColor,
                       'ویرایش',
                       'icon_edit',
                     ),
@@ -120,7 +119,7 @@ class _TaskWidgetState extends State<TaskWidget> {
         SizedBox(
           width: 6,
         ),
-        Image.asset('images/workout.png'),
+        Image.asset('images/${widget.task.taskType.image}'),
       ],
     );
   }
@@ -152,4 +151,25 @@ class _TaskWidgetState extends State<TaskWidget> {
       ),
     );
   }
+
+  String _checkTimeUnderTen(DateTime time) {
+    if (time.hour < 10 && time.minute < 10) {
+      return '0${time.hour}:0${time.minute}';
+    } else if (time.minute < 10) {
+      return '${time.hour}:0${time.minute}';
+    } else if (time.hour < 10) {
+      return '0${time.hour}:${time.minute}';
+    } else {
+      return '${time.hour}:${time.minute}';
+    }
+  }
 }
+  //if we want to show time in a correct and common time format we can use this method
+ /* String _getTimeHour(DateTime timeHour) {
+    if (timeHour.hour < 10) {
+      return '0${timeHour.hour}'; //changes 0:0 -> 00:00 or 1:6 -> 01:06
+    } else {
+      return timeHour.hour.toString();
+    }
+  }*/
+//'${_getTimeHour(widget.task.time)}:${_getTimeMinute(widget.task.time)}',
