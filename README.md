@@ -1,6 +1,8 @@
 # note_application
 
-A new Flutter project.
+A Sample Flutter Note Application.
+* Hive No-Sql Database
+* CURD Operations
 
 ## Getting Started
 
